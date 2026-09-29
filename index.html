@@ -19,6 +19,7 @@
 .bottomNav{display:flex;justify-content:space-around;padding:10px 0}
 .bottomNav div{cursor:pointer;text-align:center;font-size:13px}
 .bottomFoot{background:#0f172a;color:gold;text-align:center;padding:4px 0 6px;font-size:8px;letter-spacing:0.5px;border-top:1px solid rgba(255,215,0,0.2)}
+.foot{display:none}
 .puipaGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
 .puipaCard{background:white;border-radius:14px;padding:10px;border:2px solid #ddd;text-align:center}
 .puipaImg{width:80px;height:80px;border-radius:50%;background:#e2e8f0;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed #94a3b8;cursor:pointer}
@@ -30,10 +31,7 @@
 .thuIcon{width:58px;height:58px;background:#f0fdf4;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
 .progImgBox{margin:14px;background:white;border-radius:18px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 .progImgBox img{width:100%;display:block}
-/* === FIX BER === */
-.adminOnly{display:none!important}
-.adminOnly.show{display:block!important}
-body.admin-mode.adminOnly{display:block!important}
+.adminOnly{display:none!important}.adminOnly.show{display:block!important}
 </style></head><body>
 <div class="header"><div class="hL">⛪</div><div class="hR" id="kawnClick"><b>KAWNMAWI<br>PRESBYTERIAN<br>KOHHRAN</b><small>Estd:1984</small></div></div>
 <div class="grid">
@@ -59,16 +57,7 @@ body.admin-mode.adminOnly{display:block!important}
 <div class="page" id="p-inbox"><div class="top"><div class="back" onclick="goHome()">←</div><b>Siamtu biakna</b></div><div class="whiteBox"><h3>Min bia la</h3><input id="inboxName" placeholder="I hming" style="width:100%;padding:12px;border:2px solid #ccc;border-radius:10px;margin:6px 0"><textarea id="inboxMsg" placeholder="I thu..." style="width:100%;height:100px;padding:12px;border:2px solid #ccc;border-radius:10px;margin:6px 0"></textarea><button onclick="sendInbox()" style="width:100%;background:#16a34a;color:white;padding:14px;border-radius:10px;font-weight:800;border:none">📤 Thawn</button><div style="display:flex;gap:10px;margin-top:12px"><a href="https://api.whatsapp.com/send?phone=918575187511" target="_blank" style="flex:1;text-decoration:none"><button style="width:100%;background:#25D366;color:white;padding:12px;border-radius:10px;border:none;font-weight:800">💬Whatsapp</button></a><a href="tel:8575187511" style="flex:1;text-decoration:none"><button style="width:100%;background:#0f172a;color:white;padding:12px;border-radius:10px;border:none;font-weight:800">📞</button></a></div></div></div>
 <input type="file" id="puipaPhotoInput" accept="image/*" style="display:none">
 <script>
-var MY_NUMBER="8575187511";
-// === FIX THAR - SESSION CHAUH ===
-var isAdmin=false;
-try{
-  // localStorage hlui kha delete nghal - midang tan him nan
-  if(!location.search.includes('admin=1')){
-    localStorage.removeItem('kawn_isAdmin');
-  }
-  if(sessionStorage.getItem('kawn_isAdmin')==='true') isAdmin=true;
-}catch(e){}
+var MY_NUMBER="8575187511";var isAdmin=false;try{localStorage.removeItem('kawn_isAdmin');isAdmin=sessionStorage.getItem('kawn_isAdmin')==='true';}catch(e){}
 var chanchin="Kawnmawi Presbyterian Kohhran hi Estd: 1984 a din a ni.";var inkh="Inkhawmpui 2026 - Kawnmawi ah.";
 try{var c=localStorage.getItem('kawn_chanchin');if(c)chanchin=c;}catch(e){}
 try{var ik=localStorage.getItem('kawn_inkh');if(ik)inkh=ik;}catch(e){}
@@ -83,12 +72,7 @@ var thuSunImgs=JSON.parse(localStorage.getItem('thuSunImgs')||'{}');var curThu=0
 function openP(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('show');p.style.display='none';});var el=document.getElementById('p-'+id);if(el){el.classList.add('show');el.style.display='block';}if(id==='inkhawmpui'){renderPuipa();renderThuSun();}if(id==='photo')renderAlbums();if(id==='hriat')renderHriat();if(id==='video')renderVideo();if(id==='doc')renderDocs();updateBar();}
 function goHome(){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('show');p.style.display='none';});updateBar();}
 function closeAlbum(){var d=document.getElementById('p-albumDetail');d.classList.remove('show');d.style.display='none';renderAlbums();}
-function updateBar(){
-  document.querySelectorAll('.adminOnly').forEach(function(el){
-    if(isAdmin){el.classList.add('show');}else{el.classList.remove('show');}
-  });
-  if(isAdmin) document.body.classList.add('admin-mode'); else document.body.classList.remove('admin-mode');
-}
+function updateBar(){document.querySelectorAll('.adminOnly').forEach(function(el){if(isAdmin){el.classList.add('show');}else{el.classList.remove('show');}});}
 function startEdit(){if(!isAdmin)return;document.getElementById('ta').value=chanchin;document.getElementById('ebox').style.display='block';}
 function cEdit(){document.getElementById('ebox').style.display='none';}
 function sEdit(){var v=document.getElementById('ta').value;chanchin=v;try{localStorage.setItem('kawn_chanchin',v);}catch(e){}document.getElementById('box').innerText=v;cEdit();}
@@ -144,10 +128,16 @@ document.getElementById('box').innerText=chanchin;document.getElementById('ibox'
 <script>
 (function(){
   var SECRET="Feb26";var cnt=0;var last=0;
-  // PUBLIC link ah chuan admin ni lo nghal
-  if(!location.search.includes('admin=1')){
-    try{sessionStorage.removeItem('kawn_isAdmin');}catch(e){}
+  function autoLogout(){
+    try{
+      sessionStorage.removeItem('kawn_isAdmin');
+      sessionStorage.removeItem('kawn_admin_time');
+      isAdmin=false;
+      updateBar();
+    }catch(e){}
   }
+  window.addEventListener('pagehide', autoLogout);
+  window.addEventListener('beforeunload', autoLogout);
   var kawn=document.getElementById('kawnClick');
   kawn.addEventListener('click',function(){
     var now=Date.now();if(now-last>3000)cnt=0;last=now;cnt++;
@@ -155,37 +145,25 @@ document.getElementById('box').innerText=chanchin;document.getElementById('ibox'
       cnt=0;
       if(isAdmin){
         if(confirm('Admin i ni tawh - Logout duh em?')){
-          isAdmin=false;
-          try{sessionStorage.setItem('kawn_isAdmin','false');}catch(e){}
-          try{localStorage.removeItem('kawn_isAdmin');}catch(e){}
-          updateBar();
-          location.href=location.pathname;
+          autoLogout();
+          alert('Logout fel!');
         }
         return;
       }
-      var p=prompt('🔐 Admin Password:');
+      var p=prompt('🔐 Password:');
       if(p===SECRET){
         isAdmin=true;
-        try{sessionStorage.setItem('kawn_isAdmin','true');}catch(e){}
-        try{localStorage.removeItem('kawn_isAdmin');}catch(e){}
+        try{
+          sessionStorage.setItem('kawn_isAdmin','true');
+          sessionStorage.setItem('kawn_admin_time', String(Date.now()));
+        }catch(e){}
         updateBar();
-        alert('✅ Admin Login hlawhtling!');
-      }else if(p!==null){alert('❌ Password dik lo!');}
+        alert('✅ Admin - Side chhuahsan veleh logout ang!');
+      }else if(p!==null){
+        alert('❌ Dik lo!');
+      }
     }
   });
-  //?admin=1 link atangin lut chuan password zawt nghal
-  if(location.search.includes('admin=1') &&!isAdmin){
-    setTimeout(function(){
-      var p=prompt('🔐 Admin Password (?admin link):');
-      if(p===SECRET){
-        isAdmin=true;
-        try{sessionStorage.setItem('kawn_isAdmin','true');}catch(e){}
-        updateBar();
-        history.replaceState(null,'',location.pathname);
-        alert('✅ Admin Login!');
-      }
-    },500);
-  }
 })();
 </script>
 </body></html>
