@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kawnmawi - Final</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#eef2f7;padding-bottom:90px}
+.header{display:flex;height:80px;background:#0f172a;border-bottom:4px solid gold}
+.hL{width:65%;background:#87ceeb;display:flex;align-items:center;justify-content:center;font-size:40px}
+.hR{width:35%;color:white;text-align:center;font-size:9px;display:flex;flex-direction:column;justify-content:center;background:#0f172a;cursor:pointer}
+.btn{padding:10px 16px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
+.card{background:white;border:3px solid black;border-radius:18px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+.icon{font-size:40px;margin-bottom:8px}
+.page{position:fixed;left:0;top:0;right:0;bottom:0;background:#eef2f7;display:none;z-index:5000;overflow:auto;padding-bottom:100px}
+.page.show{display:block}
+.top{background:#1e3a5f;color:white;padding:14px;display:flex;gap:12px;align-items:center;position:sticky;top:0;z-index:10}
+.back{width:40px;height:40px;background:rgba(255,255,255,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px}
+.whiteBox{background:white;border-radius:16px;margin:12px;padding:16px;border:2px solid #ddd}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#0f172a;color:white;z-index:8000;display:flex;flex-direction:column}
+.bottomNav{display:flex;justify-content:space-around;padding:10px 0}
+.bottomNav div{cursor:pointer;text-align:center;font-size:13px}
+.bottomFoot{background:#0f172a;color:gold;text-align:center;padding:4px 0 6px;font-size:8px;letter-spacing:0.5px;border-top:1px solid rgba(255,215,0,0.2)}
+.puipaGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
+.puipaCard{background:white;border-radius:14px;padding:10px;border:2px solid #ddd;text-align:center}
+.puipaImg{width:80px;height:80px;border-radius:50%;background:#e2e8f0;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px dashed #94a3b8;cursor:pointer}
+.puipaImg img{width:100%;height:100%;object-fit:cover}
+.hriaItem{background:white;border-radius:12px;margin:8px 12px;padding:14px;border:2px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.albumCard{background:white;border-radius:14px;margin:8px 12px;padding:14px;border:3px solid #0f172a;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.docItem{background:white;border-radius:12px;margin:8px 12px;padding:12px;border:2px solid #ddd;display:flex;justify-content:space-between;align-items:center}
+.thuCard{background:white;border-radius:22px;margin:10px 12px;padding:16px;display:flex;gap:12px;align-items:center;cursor:pointer;border:1px solid #e2e8f0}
+.thuIcon{width:58px;height:58px;background:#f0fdf4;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.progImgBox{margin:14px;background:white;border-radius:18px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.progImgBox img{width:100%;display:block}
+/* === FIX BER === */
+.adminOnly{display:none!important}
+.adminOnly.show{display:block!important}
+body.admin-mode.adminOnly{display:block!important}
+</style></head><body>
+<div class="header"><div class="hL">⛪</div><div class="hR" id="kawnClick"><b>KAWNMAWI<br>PRESBYTERIAN<br>KOHHRAN</b><small>Estd:1984</small></div></div>
+<div class="grid">
+<div class="card" onclick="openP('chanchin')"><div class="icon">📰</div><b>Kohhran<br>Chanchin</b></div>
+<div class="card" onclick="openP('inkhawmpui')"><div class="icon">⛪</div><b>Inkhawmpui</b></div>
+<div class="card" onclick="openP('photo')"><div class="icon">🖼️</div><b>Thlalak</b></div>
+<div class="card" onclick="openP('doc')"><div class="icon">📄</div><b>Document</b></div>
+<div class="card" onclick="openP('video')"><div class="icon">🎥</div><b>Video</b></div>
+<div class="card" onclick="openP('hriat')"><div class="icon">📢</div><b>Hriattirna</b></div>
+</div>
+<div class="bottom">
+  <div class="bottomNav"><div onclick="goHome()">🏠<br>Home</div><div onclick="openP('hriat')">📢<br>Hriattirna</div><div onclick="openP('inkhawmpui')">📖<br>Prog</div><div onclick="openP('inbox')">💬<br>Inbox</div></div>
+  <div class="bottomFoot">KAWNMAWI PREBYTERIAN KOHHRAN MEDIA SUB COMMITTEE 2026</div>
+</div>
+<div class="page" id="p-chanchin"><div class="top"><div class="back" onclick="goHome()">←</div><b>Kohhran Chanchin</b></div><div class="whiteBox"><div id="box" style="font-size:16px;line-height:1.8;white-space:pre-wrap"></div></div><div class="adminOnly"><div style="padding:0 12px"><button onclick="startEdit()" style="width:100%;background:#16a34a;color:white;padding:18px;font-size:18px;font-weight:900;border-radius:14px;border:3px solid black">✏️TYPE RAWH</button></div></div><div id="ebox" style="display:none;background:#fffbeb;border:4px solid green;border-radius:16px;margin:12px;padding:12px"><textarea id="ta" style="width:100%;height:350px;padding:14px;border:3px solid green;border-radius:12px"></textarea><div style="display:flex;gap:10px;margin-top:12px"><button onclick="cEdit()" class="btn" style="background:#ddd;flex:1">Cancel</button><button onclick="sEdit()" class="btn" style="background:green;color:white;flex:1">💾</button></div></div></div>
+<div class="page" id="p-inkhawmpui"><div class="top"><div class="back" onclick="goHome()">←</div><b>Inkhawmpui</b></div><div class="whiteBox"><div style="font-weight:900;color:#d97706">📖 INKHAWMPUI CHANCHIN</div><div id="ibox" style="font-size:16px;line-height:1.8;white-space:pre-wrap;margin-top:8px"></div></div><div class="adminOnly"><div style="padding:0 12px"><button onclick="startEditI()" style="width:100%;background:#16a34a;color:white;padding:18px;font-size:18px;font-weight:900;border-radius:14px;border:3px solid black">✏️TYPE RAWH</button></div></div><div id="eboxI" style="display:none;background:#fffbeb;border:4px solid green;border-radius:16px;margin:12px;padding:12px"><textarea id="taI" style="width:100%;height:300px;padding:14px;border:3px solid green;border-radius:12px"></textarea><div style="display:flex;gap:10px;margin-top:12px"><button onclick="cEditI()" class="btn" style="background:#ddd;flex:1">Cancel</button><button onclick="sEditI()" class="btn" style="background:green;color:white;flex:1">💾</button></div></div><div style="padding:12px 12px 0"><h3>👥 Puipate</h3></div><div class="puipaGrid" id="plist"></div><div style="padding:20px 12px 6px"><div style="font-size:18px;font-weight:900">📖 Programme:</div></div><div id="thuSunList"></div></div>
+<div class="page" id="p-progDetail"><div class="top"><div class="back" onclick="openP('inkhawmpui')">←</div><b id="thuSunTitle">Programme</b></div><div id="thuSunDetail"></div></div>
+<div class="page" id="p-hriat"><div class="top"><div class="back" onclick="goHome()">←</div><b>Hriattirna - Department</b></div><div id="hriatMenu"></div></div>
+<div class="page" id="p-hriatDetail" style="z-index:6000"><div class="top"><div class="back" onclick="openP('hriat')">←</div><b id="hriatTitle">Dept</b></div><div class="whiteBox"><div style="font-weight:900;color:#d97706">📌 <span id="hriatTitle2"></span></div><div id="hriatBox" style="font-size:16px;line-height:1.8;white-space:pre-wrap;margin-top:8px;min-height:100px"></div></div><div class="adminOnly"><div style="padding:0 12px"><button onclick="startEditHria()" style="width:100%;background:#16a34a;color:white;padding:18px;font-size:18px;font-weight:900;border-radius:14px;border:3px solid black">✏️TYPE RAWH<span id="hriatBtnName"></span></button></div></div><div id="eboxHria" style="display:none;background:#fffbeb;border:4px solid green;border-radius:16px;margin:12px;padding:12px"><textarea id="taHria" style="width:100%;height:350px;padding:14px;border:3px solid green;border-radius:12px"></textarea><div style="display:flex;gap:10px;margin-top:12px"><button onclick="cEditHria()" class="btn" style="background:#ddd;flex:1">Cancel</button><button onclick="sEditHria()" class="btn" style="background:green;color:white;flex:1">💾Save</button></div></div></div>
+<div class="page" id="p-photo"><div class="top"><div class="back" onclick="goHome()">←</div><b>Thlalak - Album 5</b></div><div class="whiteBox" style="background:#fffbeb;border:3px dashed #2563eb"><h3>📁Thlalak</h3></div><div id="albumList"></div><div class="page" id="p-albumDetail" style="z-index:7000"><div class="top"><div class="back" onclick="closeAlbum()">←</div><b id="albumTitle">Album</b></div><div class="whiteBox adminOnly"><button onclick="document.getElementById('albumPhotoInput').click()" style="width:100%;background:#2563eb;color:white;padding:14px;border-radius:10px;font-weight:800;border:none">📤Upload</button><input type="file" id="albumPhotoInput" accept="image/*" multiple style="display:none"></div><div id="albumPhotoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px"></div></div></div>
+<div class="page" id="p-doc"><div class="top"><div class="back" onclick="goHome()">←</div><b>Document</b></div><div class="whiteBox adminOnly"><h3>📄 Document Upload</h3><input id="docTitle" placeholder="Hming" style="width:100%;padding:12px;border:2px solid #ccc;border-radius:10px;margin:8px 0"><select id="docType" style="width:100%;padding:12px;border:2px solid #ccc;border-radius:10px"><option value="PDF">PDF</option><option value="DOC"> DOC</option><option value="PM">PageMaker</option><option value="EXCEL">Excel</option><option value="OTHER">File Dang</option></select><input type="file" id="docInput" style="width:100%;margin:8px 0"><button onclick="uploadDoc()" style="width:100%;background:#16a34a;color:white;padding:14px;border-radius:10px;font-weight:900;border:none">📤 Upload</button></div><div id="docList"></div></div>
+<div class="page" id="p-video"><div class="top"><div class="back" onclick="goHome()">←</div><b>Video</b></div><div class="whiteBox adminOnly"><input id="vTitle" placeholder="Video hming" style="width:100%;padding:12px;border:2px solid #ccc;border-radius:10px;margin:8px 0"><input type="file" id="videoInput" accept="video/*" style="width:100%;margin:8px 0"><button onclick="addVideo()" style="width:100%;background:#dc2626;color:white;padding:12px;border-radius:10px;font-weight:800;border:none">🎥 Upload</button></div><div id="videoList"></div></div>
+<div class="page" id="p-inbox"><div class="top"><div class="back" onclick="goHome()">←</div><b>Siamtu biakna</b></div><div class="whiteBox"><h3>Min bia la</h3><input id="inboxName" placeholder="I hming" style="width:100%;padding:12px;border:2px solid #ccc;border-radius:10px;margin:6px 0"><textarea id="inboxMsg" placeholder="I thu..." style="width:100%;height:100px;padding:12px;border:2px solid #ccc;border-radius:10px;margin:6px 0"></textarea><button onclick="sendInbox()" style="width:100%;background:#16a34a;color:white;padding:14px;border-radius:10px;font-weight:800;border:none">📤 Thawn</button><div style="display:flex;gap:10px;margin-top:12px"><a href="https://api.whatsapp.com/send?phone=918575187511" target="_blank" style="flex:1;text-decoration:none"><button style="width:100%;background:#25D366;color:white;padding:12px;border-radius:10px;border:none;font-weight:800">💬Whatsapp</button></a><a href="tel:8575187511" style="flex:1;text-decoration:none"><button style="width:100%;background:#0f172a;color:white;padding:12px;border-radius:10px;border:none;font-weight:800">📞</button></a></div></div></div>
+<input type="file" id="puipaPhotoInput" accept="image/*" style="display:none">
+<script>
+var MY_NUMBER="8575187511";
+// === FIX THAR - SESSION CHAUH ===
+var isAdmin=false;
+try{
+  // localStorage hlui kha delete nghal - midang tan him nan
+  if(!location.search.includes('admin=1')){
+    localStorage.removeItem('kawn_isAdmin');
+  }
+  if(sessionStorage.getItem('kawn_isAdmin')==='true') isAdmin=true;
+}catch(e){}
+var chanchin="Kawnmawi Presbyterian Kohhran hi Estd: 1984 a din a ni.";var inkh="Inkhawmpui 2026 - Kawnmawi ah.";
+try{var c=localStorage.getItem('kawn_chanchin');if(c)chanchin=c;}catch(e){}
+try{var ik=localStorage.getItem('kawn_inkh');if(ik)inkh=ik;}catch(e){}
+var puipate=[];try{puipate=JSON.parse(localStorage.getItem('kawn_puipa8_full')||'null');if(!puipate||puipate.length==0)throw 'x';}catch(e){puipate=[{name:'Upa C. Malsawmkima',khua:'Zotlang',phone:'9862000001',photo:''},{name:'Upa R. Lalruatkima',khua:'Luangmual',phone:'9862000002',photo:''},{name:'Upa K. Lalchhuanawma',khua:'Zotlang',phone:'9862000003',photo:''},{name:'Upa L. Vanlalfaka',khua:'Electric',phone:'9862000004',photo:''},{name:'Upa H. Lalrammawia',khua:'Zotlang',phone:'9862000005',photo:''},{name:'Upa P. Lalthlamuana',khua:'Model',phone:'9862000006',photo:''},{name:'Upa J. Lalthanzuala',khua:'Zotlang',phone:'9862000007',photo:''},{name:'Upa M. Lalbiakzuala',khua:'Zotlang',phone:'9862000008',photo:''}];}
+var videos=[];try{videos=JSON.parse(localStorage.getItem('kawn_videos')||'[]');}catch(e){}
+var depts={};try{depts=JSON.parse(localStorage.getItem('kawn_depts')||'{}');}catch(e){}
+var albums=[];try{albums=JSON.parse(localStorage.getItem('kawn_albums5')||'null');if(!albums)throw 'no';}catch(e){albums=[{name:'Inkhawmpui Thlalak 2024',photos:[]},{name:'Kohhran Thlalak',photos:[]},{name:'Sunday School',photos:[]},{name:'KTP',photos:[]},{name:'A dang',photos:[]}];}
+var docs=[];try{docs=JSON.parse(localStorage.getItem('kawn_docs')||'[]');}catch(e){}
+var curPuipaIdx=0;var curAlbumIdx=0;var deptList=['Media','Refreshment','Usher','Reception','Security','Traffic','Medical'];var curHriat='Media';
+var thuSunData=JSON.parse(localStorage.getItem('thuSunSheets')||'null')||[{day:'Thursday',full:'October Ni 9, 2026 (Ningani)'},{day:'Friday',full:'October Ni 10, 2026 (Zirtawpni)'},{day:'Saturday',full:'October Ni 11, 2026 (Inrinni)'},{day:'Sunday',full:'October Ni 12, 2026 (Pathianni)'}];
+var thuSunImgs=JSON.parse(localStorage.getItem('thuSunImgs')||'{}');var curThu=0;
+function openP(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('show');p.style.display='none';});var el=document.getElementById('p-'+id);if(el){el.classList.add('show');el.style.display='block';}if(id==='inkhawmpui'){renderPuipa();renderThuSun();}if(id==='photo')renderAlbums();if(id==='hriat')renderHriat();if(id==='video')renderVideo();if(id==='doc')renderDocs();updateBar();}
+function goHome(){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('show');p.style.display='none';});updateBar();}
+function closeAlbum(){var d=document.getElementById('p-albumDetail');d.classList.remove('show');d.style.display='none';renderAlbums();}
+function updateBar(){
+  document.querySelectorAll('.adminOnly').forEach(function(el){
+    if(isAdmin){el.classList.add('show');}else{el.classList.remove('show');}
+  });
+  if(isAdmin) document.body.classList.add('admin-mode'); else document.body.classList.remove('admin-mode');
+}
+function startEdit(){if(!isAdmin)return;document.getElementById('ta').value=chanchin;document.getElementById('ebox').style.display='block';}
+function cEdit(){document.getElementById('ebox').style.display='none';}
+function sEdit(){var v=document.getElementById('ta').value;chanchin=v;try{localStorage.setItem('kawn_chanchin',v);}catch(e){}document.getElementById('box').innerText=v;cEdit();}
+function startEditI(){if(!isAdmin)return;document.getElementById('taI').value=inkh;document.getElementById('eboxI').style.display='block';}
+function cEditI(){document.getElementById('eboxI').style.display='none';}
+function sEditI(){var v=document.getElementById('taI').value;inkh=v;try{localStorage.setItem('kawn_inkh',v);}catch(e){}document.getElementById('ibox').innerText=v;cEditI();}
+function renderHriat(){var m=document.getElementById('hriatMenu');var h='';for(var i=0;i<deptList.length;i++){var d=deptList[i];var txt=depts[d]||'Thu la awm lo';h+='<div class="hriaItem" onclick="openHriatDept(\''+d+'\')"><div><b>⬇️ '+d+'</b><div style="font-size:11px;color:gray">'+txt.substring(0,35)+'</div></div><div>👉</div></div>';}m.innerHTML=h;}
+function openHriatDept(d){curHriat=d;var txt=depts[d]||'Thu la awm lo';document.getElementById('hriatTitle').innerText=d;document.getElementById('hriatTitle2').innerText=d;document.getElementById('hriatBtnName').innerText=d;document.getElementById('hriatBox').innerText=txt;document.getElementById('eboxHria').style.display='none';var el=document.getElementById('p-hriatDetail');el.classList.add('show');el.style.display='block';updateBar();}
+function startEditHria(){if(!isAdmin)return;document.getElementById('taHria').value=depts[curHriat]||'';document.getElementById('eboxHria').style.display='block';}
+function cEditHria(){document.getElementById('eboxHria').style.display='none';}
+function sEditHria(){var v=document.getElementById('taHria').value;depts[curHriat]=v;try{localStorage.setItem('kawn_depts',JSON.stringify(depts));}catch(e){}document.getElementById('hriatBox').innerText=v;cEditHria();renderHriat();}
+function renderPuipa(){
+  var c=document.getElementById('plist');var h='';
+  for(var i=0;i<puipate.length;i++){
+    var p=puipate[i];var has=p.photo&&p.photo.length>20;
+    h+='<div class="puipaCard"><div class="puipaImg" onclick="changePuipaPhoto('+i+')">'+(has?'<img src="'+p.photo+'">':'📸')+'</div>'+
+    '<div onclick="editPuipa('+i+',\'name\')" style="font-weight:800;font-size:11px;cursor:pointer">'+p.name+' '+(isAdmin?'✏️':'')+'</div>'+
+    '<div onclick="editPuipa('+i+',\'khua\')" style="font-size:10px;cursor:pointer;margin-top:2px">'+p.khua+' '+(isAdmin?'✏️':'')+'</div>'+
+    '<div onclick="editPuipa('+i+',\'phone\')" style="font-size:10px;cursor:pointer;margin-top:2px">📞 '+p.phone+' '+(isAdmin?'✏️':'')+'</div>'+
+    '<div style="display:flex;gap:2px;margin-top:6px"><a href="tel:'+p.phone+'" style="flex:1"><button style="width:100%;padding:4px;font-size:9px;background:#dbeafe;border:none;border-radius:4px">Call</button></a><a href="https://api.whatsapp.com/send?phone=91'+p.phone.replace(/[^0-9]/g,'')+'" target="_blank" style="flex:1"><button style="width:100%;padding:4px;font-size:9px;background:#dcfce7;border:none;border-radius:4px">WA</button></a></div></div>';
+  }
+  c.innerHTML=h;
+}
+function editPuipa(i,f){
+  if(!isAdmin)return;
+  var cur=puipate[i][f];
+  var label = f==='name'?'Hming':f==='khua'?'Khua/Veng':'Phone';
+  var v=prompt(label+' thlak:',cur);
+  if(v!==null&&v.trim()!==''){puipate[i][f]=v.trim();try{localStorage.setItem('kawn_puipa8_full',JSON.stringify(puipate));}catch(e){}renderPuipa();}
+}
+function changePuipaPhoto(i){if(!isAdmin)return;curPuipaIdx=i;document.getElementById('puipaPhotoInput').click();}
+function renderThuSun(){var el=document.getElementById('thuSunList');var h='';for(var i=0;i<thuSunData.length;i++){var d=thuSunData[i];var has=thuSunImgs[i]?' ✅':'';h+='<div class="thuCard" onclick="openThuSun('+i+')"><div class="thuIcon">⬇️</div><div style="flex:1"><div style="font-weight:800">'+d.day+has+'</div><div style="font-size:12px">'+d.full+'</div></div><div>→</div></div>';}el.innerHTML=h;}
+function openThuSun(i){curThu=i;var d=thuSunData[i];var img=thuSunImgs[i]||'';document.getElementById('thuSunTitle').innerText=d.day;var html='<div style="padding:18px"><div style="font-size:26px;font-weight:900">'+d.day+'</div><div style="font-size:18px">'+d.full+'</div></div><div class="whiteBox adminOnly" style="background:#fffbeb;border:3px dashed #16a34a"><b>✏️ EDIT - '+d.day+'</b><input id="eDay" value="'+d.day+'" style="width:100%;padding:10px;margin:5px 0"><input id="eFull" value="'+d.full+'" style="width:100%;padding:10px;margin:5px 0"><button onclick="saveThuSun()" style="width:100%;background:#f59e0b;padding:12px;border-radius:10px;border:none;font-weight:900">💾 Save</button><hr style="margin:12px 0"><b>📸 JPG UPLOAD</b><input type="file" id="thuImgInput" accept="image/*" style="width:100%;margin:8px 0"><button onclick="uploadThuSunImg()" style="width:100%;background:#16a34a;color:white;padding:14px;border-radius:10px;border:none;font-weight:900">📤 Upload JPG</button>'+(img?'<button onclick="delThuSunImg()" style="width:100%;margin-top:8px;background:#fee2e2;padding:10px;border:none;border-radius:8px">🗑️ Delete</button>':'')+'</div>'+(img?'<div class="progImgBox"><img src="'+img+'"></div>':'');document.getElementById('thuSunDetail').innerHTML=html;var el=document.getElementById('p-progDetail');el.classList.add('show');el.style.display='block';updateBar();}
+function saveThuSun(){thuSunData[curThu].day=document.getElementById('eDay').value;thuSunData[curThu].full=document.getElementById('eFull').value;try{localStorage.setItem('thuSunSheets',JSON.stringify(thuSunData));}catch(e){}renderThuSun();openThuSun(curThu);}
+function uploadThuSunImg(){var f=document.getElementById('thuImgInput').files[0];if(!f)return alert('JPG thlang rawh!');var r=new FileReader();r.onload=function(e){thuSunImgs[curThu]=e.target.result;try{localStorage.setItem('thuSunImgs',JSON.stringify(thuSunImgs));}catch(e){}renderThuSun();openThuSun(curThu);};r.readAsDataURL(f);}
+function delThuSunImg(){if(confirm('Delete?')){delete thuSunImgs[curThu];try{localStorage.setItem('thuSunImgs',JSON.stringify(thuSunImgs));}catch(e){}renderThuSun();openThuSun(curThu);}}
+function renderAlbums(){var list=document.getElementById('albumList');var h='';for(var i=0;i<albums.length;i++){var a=albums[i];var count=a.photos?a.photos.length:0;var cover=count>0?'<img src="'+a.photos[0].src+'" style="width:60px;height:60px;object-fit:cover;border-radius:10px">':'<div style="width:60px;height:60px;background:#e2e8f0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px">🖼️</div>';h+='<div class="albumCard" onclick="openAlbum('+i+')"><div style="display:flex;gap:12px;align-items:center"><div>'+cover+'</div><div><div style="font-weight:900">📁 '+a.name+' '+(isAdmin?'<span onclick="event.stopPropagation();editAlbumName('+i+')" style="background:#fbbf24;padding:2px 6px;border-radius:4px;font-size:10px">✏️ Hming thlak</span>':'')+'</div><div style="font-size:11px;color:gray">'+count+' thlalak</div></div></div><div>👉</div></div>';}list.innerHTML=h;}
+function editAlbumName(i){if(!isAdmin)return;var cur=albums[i].name;var v=prompt('Album hming thlak:',cur);if(v!==null&&v.trim()!==''){albums[i].name=v.trim();try{localStorage.setItem('kawn_albums5',JSON.stringify(albums));}catch(e){}renderAlbums();}}
+function openAlbum(i){curAlbumIdx=i;document.getElementById('albumTitle').innerText='📁 '+albums[i].name;var d=document.getElementById('p-albumDetail');d.classList.add('show');d.style.display='block';renderAlbumPhotos();updateBar();}
+function renderAlbumPhotos(){var grid=document.getElementById('albumPhotoGrid');var album=albums[curAlbumIdx];var h='';if(!album.photos||album.photos.length==0){h='<div style="grid-column:1/-1;text-align:center;padding:30px;color:gray">Thlalak la awm lo</div>';}else{for(var i=0;i<album.photos.length;i++){var p=album.photos[i];h+='<div style="background:white;border-radius:12px;overflow:hidden;border:2px solid #ddd"><img src="'+p.src+'" style="width:100%;height:130px;object-fit:cover"><div style="padding:6px;display:flex;justify-content:space-between"><span style="font-size:10px">'+p.name.substring(0,12)+'</span><button onclick="delAlbumPhoto('+i+')" style="background:#fee2e2;border:none;padding:4px 8px;border-radius:6px;font-size:10px" class="adminOnly">🗑️</button></div></div>';}}grid.innerHTML=h;updateBar();}
+function delAlbumPhoto(idx){if(!isAdmin)return;if(confirm('Delete thlalak?')){albums[curAlbumIdx].photos.splice(idx,1);try{localStorage.setItem('kawn_albums5',JSON.stringify(albums));}catch(e){}renderAlbumPhotos();renderAlbums();}}
+function uploadDoc(){if(!isAdmin)return;var title=document.getElementById('docTitle').value;var file=document.getElementById('docInput').files[0];if(!title||!file){alert('Hming leh file!');return;}var reader=new FileReader();reader.onload=function(e){docs.push({title:title,name:file.name,src:e.target.result});try{localStorage.setItem('kawn_docs',JSON.stringify(docs));}catch(e){}renderDocs();};reader.readAsDataURL(file);}
+function renderDocs(){var list=document.getElementById('docList');var h='';if(docs.length==0){h='<div class="whiteBox" style="text-align:center;color:gray">Document la awm lo</div>';}else{for(var i=0;i<docs.length;i++){var d=docs[i];h+='<div class="docItem"><div><b>'+d.title+'</b><div style="font-size:11px;color:gray">'+d.name+'</div></div><div style="display:flex;gap:6px"><a href="'+d.src+'" download="'+d.name+'"><button style="background:#2563eb;color:white;border:none;padding:8px 12px;border-radius:8px">⬇️</button></a><button onclick="delDoc('+i+')" class="adminOnly" style="background:#fee2e2;border:none;padding:8px 12px;border-radius:8px">🗑️</button></div></div>';}}list.innerHTML=h;updateBar();}
+function delDoc(i){docs.splice(i,1);try{localStorage.setItem('kawn_docs',JSON.stringify(docs));}catch(e){}renderDocs();}
+function renderVideo(){var l=document.getElementById('videoList');var h='';for(var i=0;i<videos.length;i++){var v=videos[i];h+='<div class="whiteBox"><b>🎥 '+v.title+'</b><div style="margin-top:8px;background:black;border-radius:8px;overflow:hidden"><video src="'+v.src+'" controls style="width:100%;max-height:220px"></video></div><button onclick="delVideo('+i+')" class="adminOnly" style="margin-top:6px;background:#fee2e2;border:none;padding:6px 10px;border-radius:6px">🗑️</button></div>';}if(videos.length==0)h='<div class="whiteBox" style="text-align:center;color:gray">Video la awm lo</div>';l.innerHTML=h;updateBar();}
+function addVideo(){if(!isAdmin)return;var title=document.getElementById('vTitle').value;var file=document.getElementById('videoInput').files[0];if(!title||!file){alert('Hming leh video!');return;}var reader=new FileReader();reader.onload=function(e){videos.push({title:title,src:e.target.result});try{localStorage.setItem('kawn_videos',JSON.stringify(videos));}catch(e){}renderVideo();};reader.readAsDataURL(file);}
+function delVideo(i){videos.splice(i,1);try{localStorage.setItem('kawn_videos',JSON.stringify(videos));}catch(e){}renderVideo();}
+function sendInbox(){var n=document.getElementById('inboxName').value;var m=document.getElementById('inboxMsg').value;if(!m.trim()){alert('Thu ziak rawh!');return;}var msg='*Kawnmawi Website atangin:*\nHming: '+n+'\nThu: '+m;var waUrl='https://api.whatsapp.com/send?phone=91'+MY_NUMBER+'&text='+encodeURIComponent(msg);window.open(waUrl,'_blank');}
+document.getElementById('puipaPhotoInput').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){puipate[curPuipaIdx].photo=ev.target.result;try{localStorage.setItem('kawn_puipa8_full',JSON.stringify(puipate));}catch(e){}renderPuipa();};r.readAsDataURL(f);});
+document.getElementById('albumPhotoInput').addEventListener('change',function(e){var files=e.target.files;for(var i=0;i<files.length;i++){(function(file){var r=new FileReader();r.onload=function(ev){albums[curAlbumIdx].photos.push({name:file.name,src:ev.target.result});try{localStorage.setItem('kawn_albums5',JSON.stringify(albums));}catch(err){}renderAlbumPhotos();renderAlbums();};r.readAsDataURL(file);})(files[i]);}});
+document.getElementById('box').innerText=chanchin;document.getElementById('ibox').innerText=inkh;renderPuipa();renderAlbums();renderHriat();renderVideo();renderDocs();renderThuSun();updateBar();goHome();
+</script>
+<script>
+(function(){
+  var SECRET="Feb26";var cnt=0;var last=0;
+  // PUBLIC link ah chuan admin ni lo nghal
+  if(!location.search.includes('admin=1')){
+    try{sessionStorage.removeItem('kawn_isAdmin');}catch(e){}
+  }
+  var kawn=document.getElementById('kawnClick');
+  kawn.addEventListener('click',function(){
+    var now=Date.now();if(now-last>3000)cnt=0;last=now;cnt++;
+    if(cnt>=5){
+      cnt=0;
+      if(isAdmin){
+        if(confirm('Admin i ni tawh - Logout duh em?')){
+          isAdmin=false;
+          try{sessionStorage.setItem('kawn_isAdmin','false');}catch(e){}
+          try{localStorage.removeItem('kawn_isAdmin');}catch(e){}
+          updateBar();
+          location.href=location.pathname;
+        }
+        return;
+      }
+      var p=prompt('🔐 Admin Password:');
+      if(p===SECRET){
+        isAdmin=true;
+        try{sessionStorage.setItem('kawn_isAdmin','true');}catch(e){}
+        try{localStorage.removeItem('kawn_isAdmin');}catch(e){}
+        updateBar();
+        alert('✅ Admin Login hlawhtling!');
+      }else if(p!==null){alert('❌ Password dik lo!');}
+    }
+  });
+  //?admin=1 link atangin lut chuan password zawt nghal
+  if(location.search.includes('admin=1') &&!isAdmin){
+    setTimeout(function(){
+      var p=prompt('🔐 Admin Password (?admin link):');
+      if(p===SECRET){
+        isAdmin=true;
+        try{sessionStorage.setItem('kawn_isAdmin','true');}catch(e){}
+        updateBar();
+        history.replaceState(null,'',location.pathname);
+        alert('✅ Admin Login!');
+      }
+    },500);
+  }
+})();
+</script>
+</body></html>
